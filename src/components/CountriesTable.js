@@ -37,7 +37,11 @@ function CountriesTable() {
   {
     name: "Country Flag",
     selector: (row)=><img width={50} height={50} src={row.flag} alt="Countries data"></img>,
-  }
+  },
+  {
+    name: "Action",
+    cell: (row)=><button onClick={()=>alert(row.currencies[0].symbol)}> Show Currency</button>
+  }  
  ]
   useEffect(()=>{
         getCountries();
