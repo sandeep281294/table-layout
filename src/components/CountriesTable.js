@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
 import DataTable from 'react-data-table-component'
+import './percentage.css'
 function CountriesTable() {
     const [search, setSearch]=useState("");
     const [countries, setCountries]=useState([]);
     const [filteredCountries, setFilteredCountries]=useState([]);
   const getCountries=async ()=>{
        try {
-         const response= await fetch('https://restcountries.com/v2/all').then(r=>r.json());
+         const response= await fetch('http://makeup-api.herokuapp.com/api/v1/products.json?brand=maybelline').then(r=>r.json());
          setCountries(response);
          setFilteredCountries(response);
        } catch (error) {
@@ -16,32 +17,41 @@ function CountriesTable() {
 
  const column=[
    {
-     name: "Country Name",
-     selector: (row)=>row.name,
+     name: "Product ID",
+     selector: (row)=>row.id,
      sortable: true,
    },
    {
-    name: "Country Native Name",
-    selector: (row)=>row.nativeName,
+    name: "Product brand",
+    selector: (row)=>row.brand,
   },
   {
-    name: "Country Capital",
-    selector: (row)=>row.capital,
+    name: "Product Description",
+    selector: (row)=>row.name,
     sortable: true,
   },
   {
-    name: "Country Population",
-    selector: (row)=>row.population,
+    name: "Produc Type",
+    selector: (row)=>row.product_type,
     sortable: true,
   },
   {
-    name: "Country Flag",
-    selector: (row)=><img width={50} height={50} src={row.flag} alt="Countries data"></img>,
+    name: "price",
+    selector: (row)=>`$${row.price}`,
+    sortable: true,
   },
   {
+    name: "Product Image",
+    selector: (row)=><img width={50} height={50} src={row.image_link} alt="Product Imgage"></img>,
+  },
+  {
+    name: "Rating percenatge",
+    selector: (row)=><sapn>{row.rating?row.rating:0}/5<br/><div className='bar'><div value={(row.rating*2*10)/100} style={{width:(row.rating*10)}} className="percentage"></div></div></sapn> ,
+  }
+  /*{
     name: "Action",
     cell: (row)=><button onClick={()=>alert(row.currencies[0].symbol)}> Show Currency</button>
-  }  
+  }*/  
  ]
   useEffect(()=>{
         getCountries();
@@ -55,7 +65,7 @@ function CountriesTable() {
   },[search])
   return (
     <DataTable 
-    title="Country Information" 
+    title="Product Information" 
     columns={column} 
     data={filteredCountries} 
     pagination 
